@@ -1,6 +1,9 @@
+import React from 'react';
 import './category-item-styles.scss';
 
+// eslint-disable-next-line react/prop-types
 const CategoryItem = ({ category }) => {
+	// eslint-disable-next-line react/prop-types
 	const { title, imageUrl } = category;
 
 	return (

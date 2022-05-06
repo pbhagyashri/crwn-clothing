@@ -1,3 +1,4 @@
+import React from 'react';
 import './button.styles.scss';
 
 const BUTTON_TYPE_CLASSES = {
@@ -5,6 +6,7 @@ const BUTTON_TYPE_CLASSES = {
 	inverted: 'inverted',
 };
 
+// eslint-disable-next-line react/prop-types
 const Button = ({ children, buttonType, ...otherProps }) => {
 	return (
 		<button
