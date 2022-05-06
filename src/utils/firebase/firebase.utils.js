@@ -9,6 +9,9 @@ import {
 	signInWithPopup,
 	GoogleAuthProvider,
 	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+	signOut,
+	onAuthStateChanged,
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 // Your web app's Firebase configuration
@@ -25,6 +28,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// eslint-disable-next-line no-unused-vars
 const firebaseApp = initializeApp(firebaseConfig);
 
 // to use google authentiation, we have to first initialize a provider using GoogleAuthProvider
@@ -44,7 +48,7 @@ export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (
 	userAuth,
-	additionalInformation = {}
+	additionalInformation = {},
 ) => {
 	// give me document referance 'doc' inside databse -> users colletion with this uniq identifier 'userAuth.uid'
 	// doc returns the user from database
@@ -78,3 +82,18 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 	const result = await createUserWithEmailAndPassword(auth, email, password);
 	return result;
 };
+
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+	if (!email || !password) return;
+	const result = await signInWithEmailAndPassword(auth, email, password);
+	return result;
+};
+
+export const SignOutUser = async () => await signOut(auth);
+
+// onAuthStateChanged will call the provided callback function whenever the value of auth changes
+// when a user signs in, that's considered an auth change. when user signs out, that's another change.
+// both times our callback is going to get invoked.
+// we are returning whatever we get back from onAuthStateChanged.
+export const onAuthStateChangedListener = (callback) =>
+	onAuthStateChanged(auth, callback);
