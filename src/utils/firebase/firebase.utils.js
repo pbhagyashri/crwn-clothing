@@ -13,7 +13,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from 'firebase/firestore';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // Firebase needs API key an dit is not a super secret API key so it is ok to keep it in the code.
@@ -39,17 +39,45 @@ googleProvider.setCustomParameters({
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () =>
-	signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () =>
-	signInWithRedirect(auth, googleProvider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
 
-export const createUserDocumentFromAuth = async (
-	userAuth,
-	additionalInformation = {},
-) => {
+export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
+	// create a reference to the collection we want to batch write/add our objects to;
+	const collectionRef = collection(db, collectionKey);
+	// create a batch object so that we can set actions on it like write, delete, update, etc;
+	const batch = writeBatch(db);
+
+	objectsToAdd.forEach((object) => {
+		// firebase will give a document reference  even if it doesn't exists yet;
+		// we can just point to it and add our objects in it.
+		const docRef = doc(collectionRef, object.title.toLowerCase());
+		batch.set(docRef, object);
+	});
+
+	await batch.commit();
+	console.log('done');
+};
+
+export const getCategoriesAndDocuments = async () => {
+	// generate a query and from that query get the docs
+	// here we want to get out categories collection and then get docs like hats, jackets, etc
+	const collectionRef = collection(db, 'categories');
+	const q = query(collectionRef);
+
+	// use getDocs method to get the documents inside catergories collection
+	const querySnapshot = await getDocs(q);
+	const catergoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+		const { title, items } = docSnapshot.data();
+		acc[title.toLowerCase()] = items;
+		return acc;
+	}, {});
+	return catergoryMap;
+};
+
+export const createUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
 	// give me document referance 'doc' inside databse -> users colletion with this uniq identifier 'userAuth.uid'
 	// doc returns the user from database
 	const userDocRef = doc(db, 'users', userAuth.uid);
@@ -95,5 +123,4 @@ export const SignOutUser = async () => await signOut(auth);
 // when a user signs in, that's considered an auth change. when user signs out, that's another change.
 // both times our callback is going to get invoked.
 // we are returning whatever we get back from onAuthStateChanged.
-export const onAuthStateChangedListener = (callback) =>
-	onAuthStateChanged(auth, callback);
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
