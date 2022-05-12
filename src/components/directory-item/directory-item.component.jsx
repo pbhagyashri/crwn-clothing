@@ -1,19 +1,29 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import './directory-item-styles.scss';
+import { useNavigate } from 'react-router-dom';
 
-// eslint-disable-next-line react/prop-types
+import {
+	DirectoryItemContainer,
+	BackgroundImage,
+	Body,
+	DirectoryItemTitle,
+	DirectoryItemSubTitle,
+} from './directory-item-styles';
+
 const DirectoryItem = ({ category }) => {
-	// eslint-disable-next-line react/prop-types
-	const { title, imageUrl } = category;
+	const { title, imageUrl, route } = category;
+	const navigate = useNavigate();
+
+	const onNavigationHandler = () => navigate(route);
 
 	return (
-		<div className='directory-item-container'>
-			<div className='background-image' style={{ backgroundImage: `url(${imageUrl})` }} />
-			<div className='body'>
-				<h2>{title}</h2>
-				<p>Shop Now</p>
-			</div>
-		</div>
+		<DirectoryItemContainer onClick={onNavigationHandler}>
+			<BackgroundImage imageUrl={imageUrl} />
+			<Body>
+				<DirectoryItemTitle>{title}</DirectoryItemTitle>
+				<DirectoryItemSubTitle>Shop Now</DirectoryItemSubTitle>
+			</Body>
+		</DirectoryItemContainer>
 	);
 };
 

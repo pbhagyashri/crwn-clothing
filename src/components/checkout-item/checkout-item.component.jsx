@@ -1,5 +1,15 @@
 import React, { useContext } from 'react';
-import './checkout-item.styles.scss';
+import {
+	CheckoutItemContainer,
+	ImageContainer,
+	CartItemImage,
+	CartItemName,
+	CartItemPrice,
+	CartItemQuantity,
+	CartItemValue,
+	Arrow,
+	RemoveButton,
+} from './checkout-item.styles.jsx';
 
 import { CartContext } from '../../contexts/cart-context';
 
@@ -18,25 +28,19 @@ const CheckoutItem = () => {
 	return (
 		<>
 			{cartItems.map((cartItem) => (
-				<div key={cartItem.id} className='checkout-item-container'>
-					<div className='image-container'>
-						<img src={cartItem.imageUrl} alt={`${cartItem.name}`} className='img' />
-					</div>
-					<span className='name'>{cartItem.name}</span>
-					<div className='quantity'>
-						<div className='arrow' onClick={() => handleDescrease(cartItem)}>
-							&#10094;
-						</div>
-						<span className='value'>{cartItem.quantity}</span>
-						<div className='arrow' onClick={() => handleIncrease(cartItem)}>
-							&#10095;
-						</div>
-					</div>
-					<span className='price'>{cartItem.price}</span>
-					<div className='remove-button' onClick={() => clearItemFromCart(cartItem)}>
-						&#10005;
-					</div>
-				</div>
+				<CheckoutItemContainer key={cartItem.id}>
+					<ImageContainer>
+						<CartItemImage src={cartItem.imageUrl} alt={`${cartItem.name}`} />
+					</ImageContainer>
+					<CartItemName>{cartItem.name}</CartItemName>
+					<CartItemQuantity>
+						<Arrow onClick={() => handleDescrease(cartItem)}>&#10094;</Arrow>
+						<CartItemValue>{cartItem.quantity}</CartItemValue>
+						<Arrow onClick={() => handleIncrease(cartItem)}>&#10095;</Arrow>
+					</CartItemQuantity>
+					<CartItemPrice>{cartItem.price}</CartItemPrice>
+					<RemoveButton onClick={() => clearItemFromCart(cartItem)}>&#10005;</RemoveButton>
+				</CheckoutItemContainer>
 			))}
 		</>
 	);

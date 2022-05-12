@@ -1,21 +1,13 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import './form-input.styles.scss';
+import { FormInputLable, Input, Group } from './form-input.styles.jsx';
 
-// eslint-disable-next-line react/prop-types
 const FormInput = ({ label, inputOptions }) => {
 	return (
-		<div className='group'>
-			<input className='form-input' {...inputOptions} />
-			{label && (
-				<label
-					className={`${
-						// eslint-disable-next-line react/prop-types
-						inputOptions.value.length && 'shrink'
-					} form-input-label`}>
-					{label}
-				</label>
-			)}
-		</div>
+		<Group>
+			<Input {...inputOptions} />
+			{label && <FormInputLable shrink={inputOptions.value.length}>{label}</FormInputLable>}
+		</Group>
 	);
 };
 

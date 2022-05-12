@@ -1,7 +1,7 @@
 import { React, useState, useContext } from 'react';
 import { signInAuthUserWithEmailAndPassword, signInWithGooglePopup } from '../../utils/firebase/firebase.utils';
 import FormInput from '../form-input/form-input.component';
-import Button from '../button/button.component';
+import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 import { SignInContainer, SignInFormTitle, SignInButtonContainer } from './sign-in-form.styles.jsx';
 import { UserContext } from '../../contexts/user-contexts';
 
@@ -75,7 +75,7 @@ const SignInForm = () => {
 				/>
 				<SignInButtonContainer>
 					<Button type='submit'>Sign in</Button>
-					<Button type='button' buttonType='google' onClick={signInWithGoogle}>
+					<Button type='button' buttonType={BUTTON_TYPE_CLASSES.google} onClick={signInWithGoogle}>
 						Google sign in
 					</Button>
 				</SignInButtonContainer>
